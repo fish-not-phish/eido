@@ -16,9 +16,9 @@ It allows developers and architects to **describe systems in simple, declarative
 
 👉 Check out the [Docs](https://github.com/fish-not-phish/eido/blob/main/frontend/app/docs/page.mdx) for guides, examples, and advanced usage.  
 
-```markdown
+
 ![Diagram](https://github.com/fish-not-phish/eido/blob/main/eido-file.png?raw=true)
-```
+
 
 ---
 
@@ -40,9 +40,9 @@ Server > Data
 
 Save it and see your code be transformed into a diagram! See the result below.
 
-```markdown
+
 ![Diagram](https://github.com/fish-not-phish/eido/blob/main/diagram.png?raw=true)
-```
+
 
 # Eido Development Environment
 
