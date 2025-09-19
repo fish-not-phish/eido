@@ -15,6 +15,8 @@ services:
       DATABASE_HOST: "add_your_hostname"
       DATABASE_PORT: "add_your_db_port_number"
       CORS_ALLOWED_ORIGINS: "http://localhost:3000 http://127.0.0.1:3000 add_your_domain"
+    depends_on:
+      - db
 
   db:
     image: postgres:latest
@@ -37,6 +39,8 @@ services:
     environment:
       NODE_ENV: "production"
       NEXT_PUBLIC_API_BASE_URL: "http://add_your_domain/api"
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
