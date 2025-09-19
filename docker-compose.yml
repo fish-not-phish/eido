@@ -16,7 +16,8 @@ services:
       DATABASE_PORT: "add_your_db_port_number"
       CORS_ALLOWED_ORIGINS: "http://localhost:3000 http://127.0.0.1:3000 add_your_domain"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:latest
@@ -30,6 +31,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     image: eido-frontend
