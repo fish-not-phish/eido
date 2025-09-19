@@ -3,6 +3,8 @@
 Eido is an open-source platform for **Diagram-as-Code**.  
 It allows developers and architects to **describe systems in simple, declarative code** and automatically generate clear, always-up-to-date architecture diagrams.
 
+> 💡 **Note**: Eido was inspired by [Eraser](https://eraser.io/), but is built as an open-source alternative with a modern stack (Next.js + Django + PostgreSQL) and self-hosted flexibility.
+
 ### Why Eido?
 - 🖥 **Code Visualized** – Turn DSL statements into reusable diagrams instantly.  
 - ⚡ **Modern Stack** – Built with **Next.js + React** (frontend) and **Django Ninja** (backend).  
