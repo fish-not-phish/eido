@@ -1,3 +1,49 @@
+# Eido
+
+Eido is an open-source platform for **Diagram-as-Code**.  
+It allows developers and architects to **describe systems in simple, declarative code** and automatically generate clear, always-up-to-date architecture diagrams.
+
+### Why Eido?
+- 🖥 **Code Visualized** – Turn DSL statements into reusable diagrams instantly.  
+- ⚡ **Modern Stack** – Built with **Next.js + React** (frontend) and **Django Ninja** (backend).  
+- 🗄 **Reliable Storage** – Powered by **PostgreSQL** for robust relational data.  
+- 🔗 **Docs in Sync** – Keep your documentation and system design aligned at all times.  
+
+### Use Cases
+- Keep architecture diagrams consistent with codebase changes.  
+- Generate system diagrams for onboarding, reviews, or audits.  
+- Simplify collaboration between developers, architects, and stakeholders.  
+
+👉 Check out the [Docs](https://github.com/fish-not-phish/eido/blob/main/frontend/app/docs/page.mdx) for guides, examples, and advanced usage.  
+
+```markdown
+![Diagram](https://github.com/fish-not-phish/eido/blob/main/eido-file.png?raw=true)
+```
+
+---
+
+# Example Use Case
+
+Write out your diagram as code:
+```
+Compute [icon: aws-ec2]
+
+VPC [icon: aws-vpc] {
+  Server [icon: aws-ec2]
+  Data [icon: aws-rds]
+}
+
+compute > Server
+
+Server > Data
+```
+
+Save it and see your code be transformed into a diagram! See the result below.
+
+```markdown
+![Diagram](https://github.com/fish-not-phish/eido/blob/main/diagram.png?raw=true)
+```
+
 # Eido Development Environment
 
 This project provides a full-stack development setup for **Eido**, consisting of:
