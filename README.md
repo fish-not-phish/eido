@@ -73,7 +73,9 @@ From the project root, run:
 docker build -f Dockerfile.backend -t eido-backend .
 
 # Build the Next.js frontend
-docker build -f Dockerfile.frontend -t eido-frontend .
+# For the NEXT_PUBLIC_API_BASE_URL, please use the following format and replace with your IP or domain: http://<domain_or_ip>/api
+# If running for development NEXT_PUBLIC_API_BASE_URL will likely be http://127.0.0.1:8000/api, pointing to your Django URL
+docker build -f Dockerfile.frontend --build-arg NEXT_PUBLIC_API_BASE_URL="<insert_url>" -t eido-frontend .
 
 # Pull Postgres image
 docker pull postgres:latest
