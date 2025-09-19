@@ -1,0 +1,79 @@
+---
+title: Reverse Proxy
+---
+
+# Traefik
+
+This guide explains how to deploy the Eido stack (Next.js frontend, Django backend, Postgres database) behind a **Traefik reverse proxy** with automatic HTTPS certificates from Let’s Encrypt via Cloudflare DNS challenge.
+
+> [!IMPORTANT]
+>
+> This setup assumes you already have a working Traefik instance setup and you are using Cloudflare as a DNS provider.
+
+```
+services:
+  backend:
+    image: eido-backend
+    container_name: eido_backend
+    restart: unless-stopped
+    environment:
+      DEBUG: "False"
+      SECRET_KEY: "da5e0b104e9683f5e44089b6c4ef58237fbae1d5af96232ae1a8247e05222df4f4439dd8c776783aac8d7d57358a07678bda1e3fa30c1eec377555cd46eb5898"
+      DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1 eido.my-domain.com"
+      DATABASE_NAME: "eidoDb"
+      DATABASE_USER: "eidoUser"
+      DATABASE_PASSWORD: "Password123!"
+      DATABASE_HOST: "192.168.1.111"
+      DATABASE_PORT: "5432"
+      CORS_ALLOWED_ORIGINS: "http://localhost:3000 http://127.0.0.1:3000 https://eido.my-domain.com"
+    depends_on:
+      db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.eido-backend.rule=Host(`eido.my-domain.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.eido-backend.entrypoints=websecure"
+      - "traefik.http.routers.eido-backend.tls=true"
+      - "traefik.http.routers.eido-backend.tls.certresolver=cloudflare"
+      - "traefik.http.routers.eido-backend.service=eido-backend-service"
+      - "traefik.http.services.eido-backend-service.loadbalancer.server.port=8000"
+
+  db:
+    image: postgres:latest
+    container_name: eido_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: eidoUser
+      POSTGRES_PASSWORD: Password123!
+      POSTGRES_DB: eidoDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    image: eido-frontend
+    container_name: eido_frontend
+    environment:
+      NODE_ENV: "production"
+    depends_on:
+      - backend
+    labels:
+      - "traefik.enable=true"
+
+      # Frontend serves everything else
+      - "traefik.http.routers.eido-frontend.rule=Host(`eido.my-domain.com`)"
+      - "traefik.http.routers.eido-frontend.entrypoints=websecure"
+      - "traefik.http.routers.eido-frontend.tls=true"
+      - "traefik.http.routers.eido-frontend.tls.certresolver=cloudflare"
+      - "traefik.http.routers.eido-frontend.service=eido-frontend-service"
+      - "traefik.http.services.eido-frontend-service.loadbalancer.server.port=3000"
+
+volumes:
+  postgres_data:
+```
