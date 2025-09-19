@@ -1,24 +1,15 @@
-# ----------------------
-# Stage 1: Build deps
-# ----------------------
 FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
-# Install build deps
 RUN apt-get update && apt-get install -y \
     build-essential libpq-dev && \
     rm -rf /var/lib/apt/lists/*
 
 COPY backend/requirements.txt .
 
-# Use wheels cache to make builds faster
 RUN pip install --upgrade pip && pip wheel --no-cache-dir --no-deps -r requirements.txt -w /wheels
 
-
-# ----------------------
-# Stage 2: Runtime
-# ----------------------
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -26,28 +17,21 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-# Install runtime deps (no compilers)
 RUN apt-get update && apt-get install -y libpq5 dos2unix && rm -rf /var/lib/apt/lists/*
 
-# Copy wheels from builder
 COPY --from=builder /wheels /wheels
 RUN pip install --no-cache /wheels/*
-
-# Copy Django project
 COPY backend/ /app/
 
 COPY backend-entrypoint.sh /app/entrypoint.sh
 RUN dos2unix /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# Create non-root user
 RUN adduser --disabled-password --gecos "" django && chown -R django /app
 USER django
 
-# Expose port
 EXPOSE 8000
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-# Run Gunicorn
 CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000", "--workers=4", "--threads=2", "--timeout=60"]
