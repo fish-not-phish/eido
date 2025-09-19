@@ -1,0 +1,123 @@
+---
+title: Developers
+---
+
+# Developer Setup Guide
+
+This guide explains how to bring up the **development stack** locally via the CLI.  
+⚠️ These instructions are **only for development purposes**.  
+They are **not recommended for production** deployments.
+
+## Assumptions
+
+- You are familiar with the core technologies used in this project:
+  - **PostgreSQL** for the database
+  - **Django + Django Ninja** for the backend API
+  - **Next.js** (with Bun, or npm) for the frontend
+- Only the project-specific steps are covered here.
+
+---
+
+## 1. Setup Database (PostgreSQL)
+
+You can run PostgreSQL however you like (local install, Docker, or remote). For development, Docker is easiest.
+
+### Option A: Run Postgres in Docker
+```bash
+docker pull postgres:15
+docker run --name eido-postgres \
+  -e POSTGRES_USER=eido \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=eido \
+  -p 5432:5432 \
+  -d postgres:15
+```
+
+### Option B: Use local Postgres
+- Install PostgreSQL via your package manager (brew, apt, etc.).
+- Create a database named eido with a username/password.
+
+---
+
+## 2. Setup Backend (Django + Django Ninja)
+
+1. Create a Python virtual environment:
+```bash
+python3 -m venv venv
+source venv/bin/activate   # Linux / macOS
+venv\Scripts\activate      # Windows PowerShell
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Configure database credentials in `settings.py` to match your Postgres instance:
+```
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "eido",
+        "USER": "eido",
+        "PASSWORD": "secret",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}
+```
+
+4. Apply migrations:
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+5. Start the development server:
+```
+python manage.py runserver
+```
+
+---
+
+## 3. Setup Frontend (Next.js)
+You can run the frontend with **Bun (recommended)**, or alternatively with **npm/yarn**.
+
+### Option A: Using Bun
+[Bun](https://bun.sh) is a fast JavaScript runtime. Install it with:
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+Then install dependencies and run the dev server:
+```
+bun install
+bun dev
+```
+
+
+### Option B: Using npm
+If you prefer, you can use Node’s default package managers:
+```
+npm install
+npm run dev
+```
+
+---
+
+## 4. Access the App
+- Django API: http://127.0.0.1:8000/
+- Next.js frontend: http://127.0.0.1:3000/
+
+---
+
+## ⚠️ Important Notes
+
+- These instructions are **only for local development**.  
+- Do **not** use this setup in production.  
+- For production, you should configure:
+  - Gunicorn or another WSGI server for Django.
+  - Reverse proxy (e.g., Nginx).
+  - Environment variables and secure secrets management.
+  - Proper database hosting (e.g., managed PostgreSQL).
+  - Static/media file storage and caching.

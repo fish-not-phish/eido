@@ -1,0 +1,54 @@
+---
+title: Deployment Overview
+---
+
+# Deployment Overview
+
+This section provides a high-level view of how the platform is deployed and run in different environments.  
+It covers the **frontend (Next.js)**, **backend (Django + Django Ninja)**, and **PostgreSQL database**, along with supporting infrastructure.
+
+---
+
+## Core Components
+
+- **Next.js Frontend**
+  - Runs in its own container or hosting environment.
+  - Serves the user interface and interacts with the backend via REST APIs.
+  - Built assets can be deployed to static hosting (e.g., Vercel, Netlify) or containerized.
+
+- **Django + Django Ninja Backend**
+  - Runs as an API server.
+  - Handles authentication, workspace logic, and file management.
+  - Exposed via a REST API secured with JWT.
+
+- **PostgreSQL Database**
+  - Persistent data store for users, workspaces, memberships, and files.
+  - Typically runs in its own managed service or container.
+
+- **Nextra Documentation**
+  - Lives in the same repo as the application.
+  - Bundled and deployed alongside the frontend.
+  - Provides developer-facing docs (what you’re reading now).
+
+---
+
+## Deployment Model
+
+The platform is typically deployed using **Docker Compose** for local and simple deployments.  
+In production, the same containers can be orchestrated with **Kubernetes** or run in managed services.
+
+```mermaid
+flowchart TD
+  subgraph User["User Browser"]
+    UI["Next.js Frontend"]
+  end
+
+  subgraph Deploy["Deployment Environment"]
+    FE["Next.js (Container / Host)"]
+    BE["Django + Ninja (API Server)"]
+    DB["PostgreSQL"]
+  end
+
+  UI --> FE
+  FE --> BE
+  BE --> DB

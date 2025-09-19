@@ -1,0 +1,109 @@
+---
+title: DSL Syntax
+---
+
+# Architecture DSL Syntax
+
+This DSL is used to describe cloud and system architecture diagrams in a simple, human-readable format.  
+It supports **nodes, groups, properties, and connections**, with optional styling.
+
+---
+
+## Nodes
+
+A **node** is the most basic building block.
+
+**Example:**
+```
+compute [icon: aws-ec2]
+```
+
+- **compute** → unique node name  
+- **icon: aws-ec2** → property (icon) attached to the node
+
+Nodes **must have unique names**.
+
+### Supported Properties
+- `icon`: Name of an icon (e.g., `aws-ec2`)   
+- `label`: Custom label text (use quotes if spaces, e.g., `"Main Server"`)
+
+---
+
+## Groups
+
+A **group** is a container that can hold nodes and other groups.
+
+**Example:**
+```
+Main Server {
+  Server [icon: aws-ec2]
+  Data [icon: aws-rds]
+}
+```
+
+- Groups must also have unique names.
+- Groups can be **nested**:
+```
+VPC Subnet {
+  Main Server {
+    Server [icon: aws-ec2]
+    Data [icon: aws-rds]
+  }
+}
+```
+
+Groups support the same properties as nodes (`icon`, `label`, etc.).
+
+---
+
+## Properties
+
+Properties are defined inside `[]` after a node or group.  
+
+**Example:**
+```
+VPC [icon: aws-vpc] {
+  Server [icon: aws-ec2]
+  Data [icon: aws-rds]
+}
+```
+
+---
+
+## Connections
+
+Connections represent relationships between nodes or groups.
+
+**Example:**
+```
+Compute > Storage
+```
+
+### Connector Types
+| Symbol | Description |
+|--------|-------------|
+| `>`    | Left-to-right arrow |
+| `<`    | Right-to-left arrow |
+| `<>`   | Bi-directional arrow |
+
+### Labels on Connections
+```
+Storage > Server: Cache Hit
+```
+
+---
+
+## Icons
+
+You can use icons from multiple categories:
+
+- **AWS Icons**
+- **Google Cloud Icons**
+- **Azure Icons**
+- **Tech Logos**
+- **General Icons**
+
+(See the [Icons](../docs/icons) page for a full reference list.)
+
+---
+

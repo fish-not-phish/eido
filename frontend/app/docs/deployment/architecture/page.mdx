@@ -1,0 +1,69 @@
+---
+title: Architecture
+---
+
+# System Architecture
+
+This document provides an overview of the core architecture behind the platform.  
+Our design emphasizes **simplicity**, **scalability**, and **maintainability** while leveraging modern frameworks.
+
+---
+
+## High-Level Overview
+
+The system is composed of three major layers:
+
+1. **Frontend** – built with [Next.js](https://nextjs.org/), providing a modern React-based UI.
+2. **Backend** – powered by [Django](https://www.djangoproject.com/) and [Django Ninja](https://django-ninja.dev/) for high-performance APIs.
+3. **Database** – a robust [PostgreSQL](https://www.postgresql.org/) instance for relational data storage.
+
+Nextra powers the **documentation site**, allowing us to maintain developer-friendly docs in Markdown/MDX format.
+
+---
+
+## Components
+
+### 🖥️ Frontend (Next.js)
+- Client-side React components and server-side rendering (SSR).
+- API interactions through JWT-based authentication.
+- Static assets and docs served via [Nextra](https://nextra.site).
+
+### ⚙️ Backend (Django + Django Ninja)
+- Django provides the ORM, admin, and user management.
+- Django Ninja adds fast, typed API endpoints.
+- JWT authentication (via `ninja-jwt`) secures API requests.
+- Business logic is split into **workspaces**, **files**, and **memberships**.
+
+### 🗄️ Database (PostgreSQL)
+- Centralized relational data store.
+- Stores users, workspaces, memberships, and files.
+- Transactions ensure data integrity.
+
+### 📖 Documentation (Nextra)
+- Developer docs live in the same repo as the application.
+- Supports versioned, Markdown-based content.
+- `_meta.js` files control navigation structure.
+
+---
+
+## Data Flow
+
+```mermaid
+flowchart TD
+  subgraph Client ["Frontend: Next.js"]
+    UI["UI Components"]
+    API["API Calls (axios)"]
+  end
+
+  subgraph Server ["Backend: Django + Ninja"]
+    Auth["JWT Authentication"]
+    Logic["Workspace / File Logic"]
+    DBConn["ORM Layer"]
+  end
+
+  subgraph Database ["Database"]
+    DB["PostgreSQL Database"]
+  end
+
+  UI -->|fetch/update| API
+  API --> Auth --> Logic --> DBConn --> DB
