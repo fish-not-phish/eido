@@ -53,7 +53,7 @@ export default async function DocsLayout({
       banner={banner}
       navbar={navbar}
       pageMap={await getPageMap('/docs')}
-      docsRepositoryBase="https://github.com/fish-not-phish/eido"
+      docsRepositoryBase="https://github.com/fish-not-phish/eido/tree/main/frontend/app/docs"
       footer={footer}
     >
       {children}
