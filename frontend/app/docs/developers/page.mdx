@@ -5,8 +5,11 @@ title: Developers
 # Developer Setup Guide
 
 This guide explains how to bring up the **development stack** locally via the CLI.  
-⚠️ These instructions are **only for development purposes**.  
-They are **not recommended for production** deployments.
+
+> [!WARNING]
+>
+> These instructions are **only for development purposes**
+> They are **not recommended for production** deployments.
 
 ## Assumptions
 
@@ -115,13 +118,17 @@ npm run dev
 
 ---
 
-## ⚠️ Important Notes
+# Notes
 
-- These instructions are **only for local development**.  
-- Do **not** use this setup in production.  
-- For production, you should configure:
-  - Gunicorn or another WSGI server for Django.
-  - Reverse proxy (e.g., Nginx).
-  - Environment variables and secure secrets management.
-  - Proper database hosting (e.g., managed PostgreSQL).
-  - Static/media file storage and caching.
+> [!WARNING]
+>
+> These instructions are **only for local development**.
+> Do **not** use this setup in production.
+> Follow instructions below for a more secure and stable application.
+
+For production, you should configure:
+- Gunicorn or another WSGI server for Django.
+- Reverse proxy (e.g., Nginx).
+- Environment variables and secure secrets management.
+- Proper database hosting (e.g., managed PostgreSQL).
+- Static/media file storage and caching.

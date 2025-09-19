@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postbuild": "pagefind --site .next/server/app/docs --output-path public/_pagefind"
+    "postbuild": "pagefind --site .next/server/app/docs --output-path public/_pagefind",
+    "postinstall": "node scripts/generate-icons.js"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",

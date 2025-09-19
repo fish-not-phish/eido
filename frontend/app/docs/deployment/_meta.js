@@ -1,5 +1,6 @@
 export default {
   index: "Overview",
   architecture: "Architecture",
-  setup: "Setup"
+  setup: "Setup",
+  proxies: "Reverse Proxy"
 }

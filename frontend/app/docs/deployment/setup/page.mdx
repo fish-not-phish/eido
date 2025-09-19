@@ -6,6 +6,11 @@ title: Setup
  
 Instead, you configure all environment variables directly in **docker-compose.yml**.
 
+> [!IMPORTANT]
+>
+> Use **either** `http://` **or** `https://` everywhere where a URL is required, do not mix them.
+> (e.g. if your backend is `https://eido.example.com`, then `NEXT_PUBLIC_API_BASE_URL` must also use `https://`.)
+
 ---
 
 ## 1. Build the Docker images
@@ -61,3 +66,80 @@ This will start:
 - Frontend (Next.js)
 
 Eido should now be running!
+
+> [!WARNING]
+>
+> If you need to redeploy the application with a different domain, you **need to** rebuild the frontend docker image with the new --build-arg NEXT_PUBLIC_API_BASE_URL argument. 
+
+# Example Deployment
+
+```bash
+# Build the Django backend
+docker build -f Dockerfile.backend -t eido-backend .
+
+# Build the Next.js frontend
+docker build -f Dockerfile.frontend --build-arg NEXT_PUBLIC_API_BASE_URL="https://eido.my-domain.com/api" -t eido-frontend .
+
+# Pull Postgres image
+docker pull postgres:latest
+```
+
+```bash
+# Create scret key
+openssl rand -hex 64
+```
+
+Make changes to the docker compose file for environment variables that match my NEXT_PUBLIC_API_BASE_URL
+```
+services:
+  backend:
+    image: eido-backend
+    container_name: eido_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: "False"
+      SECRET_KEY: "da5e0b104e9683f5e44089b6c4ef58237fbae1d5af96232ae1a8247e05222df4f4439dd8c776783aac8d7d57358a07678bda1e3fa30c1eec377555cd46eb5898"
+      DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1 eido.my-domain.com"
+      DATABASE_NAME: "eidoDb"
+      DATABASE_USER: "eidoUser"
+      DATABASE_PASSWORD: "Password123!"
+      DATABASE_HOST: "192.168.1.111"
+      DATABASE_PORT: "5432"
+      CORS_ALLOWED_ORIGINS: "http://localhost:3000 http://127.0.0.1:3000 https://eido.my-domain.com"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:latest
+    container_name: eido_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: eidoUser
+      POSTGRES_PASSWORD: Password123!
+      POSTGRES_DB: eidoDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    image: eido-frontend
+    container_name: eido_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: "production"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+```

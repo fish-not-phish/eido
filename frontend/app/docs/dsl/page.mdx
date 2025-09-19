@@ -41,11 +41,15 @@ Main Server {
 }
 ```
 
-- Groups must also have unique names.
-- Groups can be **nested**:
+> [!IMPORTANT]
+>
+> Groups must also have unique names.
+
+Groups can be **nested**:
+
 ```
-VPC Subnet {
-  Main Server {
+VPC Subnet [icon: aws-vpc] {
+  Main Server [icon: aws-vpc] {
     Server [icon: aws-ec2]
     Data [icon: aws-rds]
   }
