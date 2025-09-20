@@ -31,7 +31,7 @@ services:
         condition: service_healthy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.eido-backend.rule=Host(`eido.my-domain.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.eido-backend.rule=Host(`eido.my-domain.com`) && PathPrefix(`/backend`)"
       - "traefik.http.routers.eido-backend.entrypoints=websecure"
       - "traefik.http.routers.eido-backend.tls=true"
       - "traefik.http.routers.eido-backend.tls.certresolver=cloudflare"
