@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY frontend/package*.json ./
 COPY frontend/scripts ./scripts
+COPY frontend/public ./public 
 RUN npm install --frozen-lockfile
 
 COPY .git /app/.git
