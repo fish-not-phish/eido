@@ -64,7 +64,14 @@ Instead, you configure all environment variables directly in **docker-compose.ym
 
 ---
 
-## 1. Build the Docker images
+## 1. Clone the repository
+
+```bash
+git clone https://github.com/fish-not-phish/eido.git
+cd eido
+```
+
+## 2. Build the Docker images
 
 From the project root, run:
 
@@ -83,7 +90,7 @@ docker pull postgres:latest
 
 ---
 
-## 2. Configure environment variables
+## 3. Configure environment variables
 
 Create a `SECRET_KEY`:
 
@@ -104,7 +111,7 @@ Open `docker-compose.yml` and update the following values:
 
 ---
 
-## 3. Start the stack
+## 4. Start the stack
 
 Run:
 ```
