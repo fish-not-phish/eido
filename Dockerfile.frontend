@@ -3,6 +3,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY frontend/package*.json ./
+COPY frontend/scripts ./scripts
 RUN npm install --frozen-lockfile
 
 COPY .git /app/.git
