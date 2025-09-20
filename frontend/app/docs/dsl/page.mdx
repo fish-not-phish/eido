@@ -21,7 +21,10 @@ compute [icon: aws-ec2]
 - **compute** → unique node name  
 - **icon: aws-ec2** → property (icon) attached to the node
 
-Nodes **must have unique names**.
+> [!IMPORTANT]
+>
+> You **must** declare a node with an icon before defining relationships using the `>` or `<` operators.
+> Nodes **must have unique names**.
 
 ### Supported Properties
 - `icon`: Name of an icon (e.g., `aws-ec2`)   
@@ -35,7 +38,7 @@ A **group** is a container that can hold nodes and other groups.
 
 **Example:**
 ```
-Main Server {
+Main VPC [icon: aws-vpc] {
   Server [icon: aws-ec2]
   Data [icon: aws-rds]
 }
@@ -55,6 +58,10 @@ VPC Subnet [icon: aws-vpc] {
   }
 }
 ```
+
+> [!IMPORTANT]
+>
+> Each group node **must** be given an icon, or the DSL will not properly parse it.
 
 Groups support the same properties as nodes (`icon`, `label`, etc.).
 

@@ -1,0 +1,68 @@
+---
+title: Create a Diagram
+---
+
+# Creating a Simple Diagram
+
+This section walks through building a simple diagram using the Architecture DSL Syntax.
+
+---
+
+## Example Diagram Code
+
+```
+User [icon: sec-user]
+
+VPC [icon: aws-vpc] {
+  ALB [icon: aws-load-balancer]
+  ECS Cluster [icon: aws-autoscaling] {
+    ECS Service [icon: aws-ecs-service] {
+      Server [icon: aws-ecs-service]
+      AutoScaling [icon: aws-autoscaling]
+    }
+  }
+  Database [icon: aws-rds]
+}
+
+User > ALB
+ALB > Server
+Server > Database
+```
+
+---
+
+## Key Concepts Illustrated
+
+### 1. Declaring Nodes Before Use
+
+- Notice that `User [icon: sec-user]` is declared before it is used in any relationship (`User > ALB`).
+- **This is required**: a node must be declared with an icon before it can participate in connections (`>`, `<`, `<>`).
+
+### 2. Groups and Nested Nodes
+
+- The `VPC [icon: aws-vpc]` group contains other nodes and sub-groups.
+- All nodes inside groups are given an icon:
+    - `ALB [icon: aws-load-balancer]`
+    - `ECS Cluster [icon: aws-autoscaling]`
+    - `Database [icon: aws-rds]`
+
+> [!IMPORTANT]
+>
+> Groups and nodes must always declare an icon, or the DSL will fail to parse them.
+
+### 3. relationships
+
+Connections define the flow of your system:
+- `User > ALB` → traffic flows from the user to the load balancer.
+- `ALB > Server` → load balancer routes to the server.
+- `Server > Database` → server communicates with the database.
+
+You can adjust direction (`>`, `<`, `<>`) and add labels if desired (e.g., `Server > Database: Queries`).
+
+### 4. Saving and Adjusting Layout
+
+- After entering your DSL code, you must click Save for the diagram to render on the canvas.
+- Once rendered, you may want to adjust the arrow layout to better fit your diagram visually.
+- When you are satisfied, save the final result so that your adjustments are preserved.
+
+Following these rules ensures that your diagram is parsed correctly and displayed as intended.

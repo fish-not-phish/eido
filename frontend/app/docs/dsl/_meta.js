@@ -1,3 +1,4 @@
 export default {
-  index: "Syntax"
+  index: "Syntax",
+  query: "Create a Diagram"
 }

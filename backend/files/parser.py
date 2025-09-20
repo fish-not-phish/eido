@@ -34,16 +34,21 @@ def parse_dsl(code: str):
     idx = 0
     n = len(tokens)
     connections = []
+    defined_nodes = {}
 
     node_line_re = re.compile(r'^(?P<name>[^\[\]{}]+?)\s*\[(?P<inside>.+?)\]\s*$')
     conn_line_re = re.compile(
-        r'^(?P<a>[^{}\[\]:]+?)\s*(?P<op><|>|<>)\s*(?P<b>[^{}\[\]:]+?)(?::\s*(?P<label>.+))?$'
+        r'^(?P<a>[^\{\}]+?(?:\s*\[.*?\])?)\s*'
+        r'(?P<op><|>|<>)\s*'
+        r'(?P<b>[^\{\}]+?(?:\s*\[.*?\])?)'
+        r'(?:\s*:\s*(?P<label>.+))?$'
     )
+    inline_node_re = re.compile(r'^(?P<name>[^\[\]{}:]+?)\s*\[(?P<inside>.+?)\]$')
 
     def parse_props(s: str) -> dict:
         props = {}
         parts, buf, in_q = [], [], False
-        for ch in s:
+        for ch in (s or ""):
             if ch == '"' and (not buf or buf[-1] != "\\"):
                 in_q = not in_q
                 buf.append(ch)
@@ -61,6 +66,17 @@ def parse_dsl(code: str):
                 v = v.strip().strip('"')
                 props[k] = v
         return props
+
+    def add_node(name: str, props: dict, items: list):
+        if name not in defined_nodes:
+            node = {
+                "type": "service",
+                "name": name,
+                "icon": props.get("icon"),
+                "label": props.get("label", name),
+            }
+            items.append(node)
+            defined_nodes[name] = node
 
     def parse_block():
         nonlocal idx
@@ -81,29 +97,65 @@ def parse_dsl(code: str):
                 if idx + 1 < n and tokens[idx + 1] == "{":
                     idx += 2
                     children = parse_block()
-                    items.append({
+                    node = {
                         "type": "container",
                         "name": name,
                         "icon": props.get("icon"),
                         "label": props.get("label", name),
                         "children": children,
-                    })
+                    }
                 else:
                     idx += 1
-                    items.append({
+                    node = {
                         "type": "service",
                         "name": name,
                         "icon": props.get("icon"),
                         "label": props.get("label", name),
-                    })
+                    }
+                items.append(node)
+                defined_nodes[name] = node
+                continue
+
+            if ">" not in tok and "<" not in tok and "<>" not in tok and "[" not in tok and tok not in ("{", "}"):
+                name = tok.strip()
+                node = {
+                    "type": "service",
+                    "name": name,
+                    "icon": None,
+                    "label": name,
+                }
+                idx += 1
+                items.append(node)
+                defined_nodes[name] = node
                 continue
 
             m_conn = conn_line_re.match(tok)
             if m_conn:
-                a = m_conn.group("a").strip()
-                b = m_conn.group("b").strip()
+                a_raw = m_conn.group("a").strip()
+                b_raw = m_conn.group("b").strip()
                 op = m_conn.group("op")
                 label = (m_conn.group("label") or "").strip() or None
+
+                def ensure_node(raw, name):
+                    m_inline = inline_node_re.match(raw)
+                    if m_inline:
+                        props = parse_props(m_inline.group("inside"))
+                        add_node(name, props, items)
+                    else:
+                        add_node(name, {}, items)
+
+                def normalize(raw):
+                    m_inline = inline_node_re.match(raw)
+                    if m_inline:
+                        return m_inline.group("name").strip()
+                    return raw.strip()
+
+                a = normalize(a_raw)
+                b = normalize(b_raw)
+
+                ensure_node(a_raw, a)
+                ensure_node(b_raw, b)
+
                 if op == ">":
                     connections.append({"from": a, "to": b, "label": label, "dir": "fwd"})
                 elif op == "<":
@@ -113,11 +165,14 @@ def parse_dsl(code: str):
                 idx += 1
                 continue
 
+
             idx += 1
         return items
 
     top_nodes = parse_block()
     return {"nodes": top_nodes, "connections": connections}
+
+
 
 def generate_excalidraw(nodes, connections):
     elements, files, positions = [], {}, {}
@@ -404,6 +459,14 @@ def generate_excalidraw(nodes, connections):
             "groupIds": group_ids,
             **rect_meta,
         })
+
+        positions[node["name"]] = {
+            "cx": abs_left + w / 2.0,
+            "cy": abs_top + h / 2.0,
+            "w": w,
+            "h": h,
+            "id": rect_id,
+        }
 
         tiny_file_id = add_file(node.get("icon"))
         elements.append({
