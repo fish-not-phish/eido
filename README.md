@@ -107,7 +107,7 @@ Open `docker-compose.yml` and update the following values:
 - Database
     - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` → must match backend’s DB settings
 - Frontend
-    - `NEXT_PUBLIC_API_BASE_URL` → URL for the API (e.g. `http://localhost:8000/api` for local dev, `https://eido.example.com/api` for prod)
+    - `NEXT_PUBLIC_API_BASE_URL` → URL for the API (e.g. `http://localhost:8000/backend/api` for local dev, `https://eido.example.com/backend/api` for prod)
 
 ---
 
