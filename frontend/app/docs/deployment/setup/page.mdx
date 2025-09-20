@@ -102,7 +102,7 @@ services:
   backend:
     image: eido-backend
     container_name: eido_backend
-    restart: unless-stopped
+    restart: always
     ports:
       - "8000:8000"
     environment:
@@ -122,7 +122,7 @@ services:
   db:
     image: postgres:latest
     container_name: eido_db
-    restart: unless-stopped
+    restart: always
     environment:
       POSTGRES_USER: eidoUser
       POSTGRES_PASSWORD: Password123!
@@ -140,6 +140,7 @@ services:
   frontend:
     image: eido-frontend
     container_name: eido_frontend
+    restart: always
     ports:
       - "3000:3000"
     environment:

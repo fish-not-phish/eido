@@ -15,7 +15,7 @@ services:
   backend:
     image: eido-backend
     container_name: eido_backend
-    restart: unless-stopped
+    restart: always
     environment:
       DEBUG: "False"
       SECRET_KEY: "da5e0b104e9683f5e44089b6c4ef58237fbae1d5af96232ae1a8247e05222df4f4439dd8c776783aac8d7d57358a07678bda1e3fa30c1eec377555cd46eb5898"
@@ -41,7 +41,7 @@ services:
   db:
     image: postgres:latest
     container_name: eido_db
-    restart: unless-stopped
+    restart: always
     environment:
       POSTGRES_USER: eidoUser
       POSTGRES_PASSWORD: Password123!
@@ -59,6 +59,7 @@ services:
   frontend:
     image: eido-frontend
     container_name: eido_frontend
+    restart: always
     environment:
       NODE_ENV: "production"
     depends_on:
