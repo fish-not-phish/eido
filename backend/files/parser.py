@@ -193,20 +193,20 @@ def generate_excalidraw(nodes, connections):
     TOP_ROW_GAP = 120
 
     PALETTE_FILL = [
-        "#FFE8D5",
-        "#E6F0FF",
-        "#FFE6E6",
-        "#E8F5E9",
-        "#FFF9C4",
-        "#F1E6FF",
+        "#5C2960",
+        "#21385B",
+        "#2A5D33",
+        "#595B27",
+        "#5F3C25",
+        "#632924",
     ]
     PALETTE_STROKE = [
-        "#FFF0E4",
-        "#EFF5FF",
-        "#FFEFEF",
-        "#F0F8F1",
-        "#FFFBD9",
-        "#F6EFFF",
+        "#e502f7",
+        "#0263f5",
+        "#05f730",
+        "#f3fc03",
+        "#fc6400",
+        "#f71602",
     ]
 
     def unique_id(prefix="id"):
@@ -445,6 +445,7 @@ def generate_excalidraw(nodes, connections):
 
         rect_meta = default_meta()
         rect_meta["strokeColor"] = stroke_color
+        rect_meta["opacity"] = "40"
         rect_meta["backgroundColor"] = fill_color
         rect_meta["fillStyle"] = "solid"
         rect_meta["strokeWidth"] = 2
