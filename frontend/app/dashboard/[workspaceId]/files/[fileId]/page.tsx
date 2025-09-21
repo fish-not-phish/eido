@@ -213,13 +213,19 @@ export default function FilePage() {
     <div className="relative flex h-screen overflow-hidden">
       <div className="flex-1">
         <Excalidraw
-          initialData={whiteboardRef.current}
+          initialData={{
+            ...whiteboardRef.current,
+            appState: {
+              ...(whiteboardRef.current?.appState || {}),
+              viewBackgroundColor: "#1C1C1C",
+            },
+          }}
           onChange={(elements, appState, files) => {
             whiteboardRef.current = { elements, appState, files };
           }}
-          theme="dark"
           excalidrawAPI={(api) => {
             excalidrawRef.current = api;
+
             if (whiteboardRef.current?.files) {
               api.addFiles(Object.values(whiteboardRef.current.files));
             }

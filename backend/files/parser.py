@@ -215,7 +215,7 @@ def generate_excalidraw(nodes, connections):
     def default_meta():
         return {
             "angle": 0,
-            "strokeColor": "#1e1e1e",
+            "strokeColor": "#ffffff",
             "backgroundColor": "transparent",
             "fillStyle": "solid",
             "strokeWidth": 2,
@@ -645,8 +645,8 @@ def generate_excalidraw(nodes, connections):
     return {
         "type": "excalidraw",
         "version": 2,
-        "source": "django-backend",
+        "source": "eido-backend",
         "elements": elements,
-        "appState": {"viewBackgroundColor": "#ffffff", "gridSize": 20},
+        "appState": {"viewBackgroundColor": "#1C1C1C", "gridSize": 20},
         "files": files,
     }
